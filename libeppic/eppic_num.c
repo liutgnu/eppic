@@ -59,6 +59,7 @@ ll:
     }
     v->type.typattr=eppic_idxtoattr(v->type.idx);
     v->set=0;
+    eppic_freedata(v);
     return v;
 }
 

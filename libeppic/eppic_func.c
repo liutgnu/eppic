@@ -916,6 +916,7 @@ char *ocurp, *curp;
                 parm=parm->next, i++) {
 
                 var_t*var=eppic_newvar(parm->name);
+                eppic_freeval(var->v);
 
                 var->v=eppic_cloneval(parm->v);
                 eppic_chkandconvert(var->v, vp[i]);

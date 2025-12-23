@@ -129,6 +129,8 @@ int i;
 
     for(i=0;i<m->np;i++) eppic_free(m->p[i]);
     if(m->np) eppic_free(m->p);
+    if(m->name) eppic_free(m->name);
+    if(m->buf) eppic_free(m->buf);
     eppic_free(m);
 }
 

@@ -220,7 +220,7 @@ int npages;
     
 #endif
 
-
+    memset(m, 0, size);
     bl=(blist*)m;
     bl->size=size;
     bl->level=njmps;

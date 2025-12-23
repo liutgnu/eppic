@@ -209,8 +209,10 @@ eppic_popin(void)
             inpp=0;
 #endif
         }
-        if(!nin) in=0;
-        else {
+        if(!nin) {
+            in=0;
+            eppic_delete_buffer(inlist[0].yybuf);
+        } else {
 
             in=&inlist[nin-1];
             if(!eol) {

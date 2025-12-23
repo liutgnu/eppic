@@ -200,7 +200,9 @@ eppic_duptype(type_t*t, type_t*ts)
 {
     // eppic_do_deref can call in here with same pointer
     if(t == ts) return;
-    
+
+    if (t->idxlst != ts->idxlst)
+        eppic_free(t->idxlst);
     memmove(t, ts, sizeof(type_t));
     if(ts->idxlst) {
 
@@ -268,6 +270,10 @@ eppic_cloneval(value_t *v)
 value_t *nv=eppic_alloc(sizeof(value_t));
 
     memmove(nv, v, sizeof(value_t));
+    if (v->type.idxlst) {
+        nv->type.idxlst = eppic_alloc(sizeof(int)*(MAXIDX+1));
+        memmove(nv->type.idxlst, v->type.idxlst, sizeof(int)*(MAXIDX+1));
+    }
     eppic_refarray(v, 1);
     eppic_dupdata(nv, v);
     return nv;

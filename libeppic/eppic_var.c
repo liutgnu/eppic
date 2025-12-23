@@ -210,7 +210,11 @@ var_t*var;
         if(var->name[0]) {
            var_t *plist=eppic_newvlist();
            eppic_enqueue(plist, var);
-           eppic_addsvs(S_PARSE, eppic_dupvlist(plist));
+           var_t *dup = eppic_dupvlist(plist);
+           eppic_addsvs(S_PARSE, dup);
+           eppic_dequeue(var);
+           eppic_freevlist(plist);
+           eppic_freevlist(dup);
         }
         eppic_enqueue(vlist, var);
 next:
@@ -403,6 +407,10 @@ void
 eppic_freeval(value_t *v)
 {
     if(!v) return;
+    if (v->type.idxlst) {
+        eppic_free(v->type.idxlst);
+        v->type.idxlst = NULL;
+    }
     eppic_freedata(v);
     eppic_free(v);
 }
@@ -705,6 +713,18 @@ var_t*p=eppic_newvar("");
     TAG(p);
     TAG(p->name);
     return p;
+}
+
+void
+eppic_freevlist(var_t*vl)
+{
+    var_t *vp, *np;
+    for (vp=vl->next; vp != vl;) {
+        np = vp->next;
+        eppic_freevar(vp);
+        vp = np;
+    }
+    eppic_freevar(vl);
 }
 
 /* this is called when we duplicate a list of automatic variables */

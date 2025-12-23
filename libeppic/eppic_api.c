@@ -431,7 +431,7 @@ char *pname;
         last=&stm->next;
         mname="";
         stm=eppic_calloc(sizeof(stmember_t));
-        if(pname[0]) eppic_free(pname);
+        eppic_free(pname);
     }
     st->all=1;
     eppic_free(stm);
@@ -448,7 +448,10 @@ type_t *t=eppic_newtype();
     if(!(st=eppic_getst(name, ctype))) {
 
         eppic_dbg_named(DBG_TYPE, name, 2, "getctype [%s] not found in cache - isneg %d\n", name, eppic_isneg(name));
-        if(silent && eppic_isneg(name)) return 0;
+        if(silent && eppic_isneg(name)) {
+            eppic_freetype(t);
+            return 0;
+        }
 
         st=eppic_calloc(sizeof(stinfo_t));
         if(!API_GETCTYPE(ctype, name,  &st->ctype)) {
@@ -1152,7 +1155,7 @@ def_t *dt;
         dt=dt->next;
     }
     /* add the eppic define */
-    eppic_newmac(eppic_strdup("eppic"), eppic_strdup("1"), 0, 0, 1);
+    eppic_newmac("eppic", eppic_strdup("1"), 0, 0, 1);
 }
 
 /*
@@ -1506,9 +1509,9 @@ value_t *idx, *val;
                 }
                 eppic_free(a);
             }
-            eppic_free(f);
         }
         else optind=1;
+        eppic_free(f);
 
         /* put every other args into the argv[] array_t*/
         args=(var_t*)eppic_newvar("argv");
